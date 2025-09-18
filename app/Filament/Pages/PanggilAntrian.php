@@ -6,21 +6,25 @@ use App\Models\Antrian;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use BackedEnum; // <-- Tambahkan ini
+use UnitEnum;   // <-- Tambahkan ini
 
 class PanggilAntrian extends Page
 {
-    // Deklarasi properti yang benar
-    protected static ?string $navigationIcon = 'heroicon-o-speaker-wave';
-    protected static string $view = 'filament.pages.panggil-antrian';
-    protected static ?string $navigationGroup = 'Antrian';
+    // --- Properti di bawah ini disesuaikan ---
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-speaker-wave';
+    protected string $view = 'filament.pages.panggil-antrian';
+    protected static string | UnitEnum | null $navigationGroup = 'Antrian';
+    protected static ?string $title = 'Panggil Antrian';
     protected static ?int $navigationSort = 1;
 
-    // Properti untuk melacak antrian
     public ?Antrian $dipanggilPst = null;
     public ?Antrian $berikutnyaPst = null;
     public ?Antrian $dipanggilPpid = null;
     public ?Antrian $berikutnyaPpid = null;
+    public bool $layananBuka = true;
 
+    // ... sisa kode method Anda tetap sama ...
     public function mount(): void
     {
         $this->loadQueueStates();
@@ -29,35 +33,20 @@ class PanggilAntrian extends Page
     protected function loadQueueStates(): void
     {
         $today = today();
+        $baseQuery = fn($jenis) => Antrian::where('tanggal_antrian', $today)
+            ->whereHas('tamu', fn($q) => $q->where('jenis_pelayanan', $jenis));
 
-        // Cari antrian DIPANGGIL untuk PST
-        $this->dipanggilPst = Antrian::where('status', 'dipanggil')
-            ->where('tanggal_antrian', $today)
-            ->whereHas('tamu', fn ($q) => $q->where('jenis_pelayanan', 'PST'))
-            ->first();
+        $this->dipanggilPst = (clone $baseQuery('PST'))->where('status', 'dipanggil')->first();
+        $this->berikutnyaPst = (clone $baseQuery('PST'))->where('status', 'menunggu')->orderBy('created_at', 'asc')->first();
 
-        // Cari antrian MENUNGGU berikutnya untuk PST
-        $this->berikutnyaPst = Antrian::where('status', 'menunggu')
-            ->where('tanggal_antrian', $today)
-            ->whereHas('tamu', fn ($q) => $q->where('jenis_pelayanan', 'PST'))
-            ->orderBy('created_at', 'asc')
-            ->first();
-
-        // Lakukan hal yang sama untuk PPID
-        $this->dipanggilPpid = Antrian::where('status', 'dipanggil')
-            ->where('tanggal_antrian', $today)
-            ->whereHas('tamu', fn ($q) => $q->where('jenis_pelayanan', 'PPID'))
-            ->first();
-
-        $this->berikutnyaPpid = Antrian::where('status', 'menunggu')
-            ->where('tanggal_antrian', $today)
-            ->whereHas('tamu', fn ($q) => $q->where('jenis_pelayanan', 'PPID'))
-            ->orderBy('created_at', 'asc')
-            ->first();
+        $this->dipanggilPpid = (clone $baseQuery('PPID'))->where('status', 'dipanggil')->first();
+        $this->berikutnyaPpid = (clone $baseQuery('PPID'))->where('status', 'menunggu')->orderBy('created_at', 'asc')->first();
     }
 
     public function panggilBerikutnya(string $jenisLayanan): void
     {
+        if (!$this->layananBuka) return;
+
         $antrianToCall = ($jenisLayanan === 'PST') ? $this->berikutnyaPst : $this->berikutnyaPpid;
 
         if ($antrianToCall) {
@@ -87,22 +76,17 @@ class PanggilAntrian extends Page
         }
     }
 
+    public function toggleLayanan(): void
+    {
+        $this->layananBuka = !$this->layananBuka;
+    }
+
     protected function getHeaderActions(): array
     {
         return [
             Action::make('testSound')
                 ->label('Testing Suara Monitor')
-                ->action(fn () => $this->dispatch('play-sound', number: 'Testing suara', loket: 'satu dua tiga')),
-            Action::make('resetDay')
-                ->label('Reset Antrian Hari Ini')
-                ->color('danger')
-                ->requiresConfirmation()
-                ->action(function () {
-                    Antrian::where('tanggal_antrian', today())->whereIn('status', ['menunggu', 'dipanggil', 'dilewati'])
-                        ->update(['status' => 'dibatalkan']);
-                    Notification::make()->title('Semua antrian hari ini telah di-reset.')->success()->send();
-                    $this->loadQueueStates();
-                }),
+                ->action(fn() => $this->dispatch('play-sound', number: 'Testing suara', loket: 'satu dua tiga')),
         ];
     }
 }
