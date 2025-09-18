@@ -92,21 +92,6 @@ class GuestForm extends Component
         return redirect()->route('antrian.ticket', ['antrian' => $antrian->id]);
     }
 
-    public function downloadPdf()
-    {
-        // Buat PDF dari view 'pdf.ticket' dan teruskan data antrian
-        $pdf = Pdf::loadView('pdf.ticket', ['antrian' => $this->antrian]);
-
-        // Tentukan nama file yang akan di-download
-        $filename = 'tiket-antrian-' . $this->antrian->no_antrian . '.pdf';
-
-        // Kirim PDF ke browser untuk di-download
-        return response()->streamDownload(
-            fn() => print($pdf->output()),
-            $filename
-        );
-    }
-
     #[Title('Form Kunjungan')]
     public function render()
     {

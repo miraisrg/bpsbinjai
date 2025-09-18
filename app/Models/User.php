@@ -5,8 +5,10 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use App\Models\JadwalPiket;
 
 class User extends Authenticatable
 {
@@ -22,7 +24,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'no_wa',
+        'role',
+        'google_id',
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -57,5 +63,10 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    public function jadwalPiket(): HasMany
+    {
+        return $this->hasMany(JadwalPiket::class);
     }
 }
