@@ -23,12 +23,14 @@ class QueueTable extends TableWidget
                 Antrian::query()
                     ->whereDate('tanggal_antrian', today())
                     ->orderBy('created_at', 'asc')
+                    ->with(['tamu.klasifikasi'])
             )
             // Mendefinisikan kolom-kolom yang akan tampil
             ->columns([
                 TextColumn::make('no_antrian')->label('No. Antrian')->searchable(),
                 TextColumn::make('tamu.nama_pengunjung')->label('Nama Pengunjung')->searchable(),
-                TextColumn::make('tamu.jenis_pelayanan')->label('Jenis Layanan'),
+                TextColumn::make('tamu.klasifikasi.nama_klasifikasi')
+                    ->label('Jenis Layanan'),
                 TextColumn::make('created_at')->label('Waktu Datang')->time('H:i:s'),
                 TextColumn::make('status')
                     ->badge()
@@ -41,7 +43,7 @@ class QueueTable extends TableWidget
                     })
             ])
             // Mendefinisikan aksi untuk setiap baris
-            ->actions([
+            ->recordActions([
                 Action::make('panggil')
                     ->label('Panggil')
                     ->color('success')

@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('pelayanans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('antrian_id')->constrained('antrians')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('klasifikasi_pelayanan_id')->constrained('klasifikasi_pelayanans');
+            $table->foreignId('user_id')->nullable()->constrained('users');
+            $table->foreignId('klasifikasi_pelayanan_id')->nullable()->constrained('klasifikasi_pelayanans');
             $table->text('kebutuhan_pengaduan')->nullable();
             $table->string('status_pelayanan');
             $table->date('tgl_penyelesaian')->nullable();

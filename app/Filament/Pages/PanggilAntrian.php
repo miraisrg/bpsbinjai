@@ -33,14 +33,14 @@ class PanggilAntrian extends Page
     protected function loadQueueStates(): void
     {
         $today = today();
-        $baseQuery = fn($jenis) => Antrian::where('tanggal_antrian', $today)
-            ->whereHas('tamu', fn($q) => $q->where('jenis_pelayanan', $jenis));
+        $baseQuery = fn($klasifikasi) => Antrian::where('tanggal_antrian', $today)
+            ->whereHas('tamu.klasifikasi', fn($q) => $q->where('nama_klasifikasi', $klasifikasi));
 
-        $this->dipanggilPst = (clone $baseQuery('PST'))->where('status', 'dipanggil')->first();
-        $this->berikutnyaPst = (clone $baseQuery('PST'))->where('status', 'menunggu')->orderBy('created_at', 'asc')->first();
+        $this->dipanggilPst = (clone $baseQuery('Pelayanan Statistik Terpadu (PST)'))->where('status', 'dipanggil')->first();
+        $this->berikutnyaPst = (clone $baseQuery('Pelayanan Statistik Terpadu (PST)'))->where('status', 'menunggu')->orderBy('created_at', 'asc')->first();
 
-        $this->dipanggilPpid = (clone $baseQuery('PPID'))->where('status', 'dipanggil')->first();
-        $this->berikutnyaPpid = (clone $baseQuery('PPID'))->where('status', 'menunggu')->orderBy('created_at', 'asc')->first();
+        $this->dipanggilPpid = (clone $baseQuery('Layanan PPID'))->where('status', 'dipanggil')->first();
+        $this->berikutnyaPpid = (clone $baseQuery('Layanan PPID'))->where('status', 'menunggu')->orderBy('created_at', 'asc')->first();
     }
 
     public function panggilBerikutnya(string $jenisLayanan): void

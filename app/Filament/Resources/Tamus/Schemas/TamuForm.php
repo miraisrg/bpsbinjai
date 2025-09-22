@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Tamus\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
 
 class TamuForm
 {
@@ -23,7 +24,9 @@ class TamuForm
                     ->label('Email address')
                     ->email()
                     ->required(),
-                TextInput::make('jenis_pelayanan')
+                Select::make('klasifikasi_pelayanan_id')
+                    ->label('Jenis Pelayanan')
+                    ->relationship('klasifikasi', 'nama_klasifikasi') // sesuai relasi di model Tamu
                     ->required(),
             ]);
     }

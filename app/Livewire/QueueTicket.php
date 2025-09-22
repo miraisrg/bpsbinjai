@@ -6,6 +6,7 @@ use App\Models\Antrian;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Livewire\Attributes\Layout;
 
 class QueueTicket extends Component
 {
@@ -33,9 +34,9 @@ class QueueTicket extends Component
     }
 
     #[Title('Tiket Antrian')]
+    #[Layout('components.layouts.guest')]
     public function render()
     {
-        return view('livewire.queue-ticket')
-                ->layout('components.layouts.guest');
+        return view('livewire.queue-ticket');
     }
 }

@@ -21,4 +21,12 @@ class Antrian extends Model
     {
         return $this->belongsTo(Tamu::class);
     }
+    public function pelayanan(): BelongsTo
+    {
+        return $this->belongsTo(Pelayanan::class);
+    }
+    public function klasifikasi(): BelongsTo
+    {
+        return $this->belongsTo(KlasifikasiPelayanan::class, 'klasifikasi_pelayanan_id');
+    }
 }

@@ -16,4 +16,14 @@ class KlasifikasiPelayanan extends Model
     {
         return $this->hasMany(Pelayanan::class);
     }
+
+    public function tamus(): HasMany
+    {
+        return $this->hasMany(Tamu::class, 'klasifikasi_pelayanan_id');
+    }
+
+    public function Antrians(): HasMany
+    {
+        return $this->hasMany(Antrian::class, 'klasifikasi_pelayanan_id');
+    }
 }

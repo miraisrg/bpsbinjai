@@ -13,11 +13,12 @@
             <p class="text-gray-600">Nomor Antrian Anda:</p>
             <p class="text-5xl font-bold text-black">{{ $antrian->no_antrian }}</p>
             <p class="text-sm text-gray-500">
-                {{ $antrian->created_at->isoFormat('DD MMMM YYYY') }} &nbsp;&bull;&nbsp; {{ $antrian->created_at->format('H:i') }}
+                {{ $antrian->created_at->isoFormat('DD MMMM YYYY') }} &nbsp;&bull;&nbsp;
+                {{ $antrian->created_at->format('H:i') }}
             </p>
             <div>
                 <span class="inline-block bg-gray-200 text-gray-800 text-sm font-medium px-3 py-1 rounded-full">
-                    Jenis Pelayanan: {{ $antrian->tamu->jenis_pelayanan }}
+                    Jenis Pelayanan: {{ $antrian->tamu->klasifikasiPelayanan->nama_klasifikasi ?? '-' }}
                 </span>
             </div>
         </div>

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\KlasifikasiPelayanan;
 
 class Tamu extends Model
 {
@@ -16,11 +18,16 @@ class Tamu extends Model
         'nama_instansi',
         'no_wa',
         'email',
-        'jenis_pelayanan',
+        'klasifikasi_pelayanan_id',
     ];
 
     public function antrians(): HasMany
     {
         return $this->hasMany(Antrian::class);
+    }
+
+    public function klasifikasi(): BelongsTo
+    {
+        return $this->belongsTo(KlasifikasiPelayanan::class, 'klasifikasi_pelayanan_id');
     }
 }

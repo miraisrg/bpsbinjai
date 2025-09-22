@@ -4,6 +4,8 @@ namespace App\Filament\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use App\Models\Tamu;
+use App\Models\KlasifikasiPelayanan;
+use Illuminate\Support\Facades\DB;
 
 class ServiceTypeChart extends ChartWidget
 {
@@ -13,11 +15,12 @@ class ServiceTypeChart extends ChartWidget
     protected function getData(): array
     {
         $data = Tamu::query()
-            ->where('created_at', '>=', now()->startOfMonth())
-            ->groupBy('jenis_pelayanan')
-            ->selectRaw('jenis_pelayanan, count(*) as total')
+            ->select('klasifikasi_pelayanans.nama_klasifikasi', DB::raw('COUNT(tamus.id) as total'))
+            ->join('klasifikasi_pelayanans', 'tamus.klasifikasi_pelayanan_id', '=', 'klasifikasi_pelayanans.id')
+            ->where('tamus.created_at', '>=', now()->startOfMonth())
+            ->groupBy('klasifikasi_pelayanans.nama_klasifikasi')
             ->get();
-        
+
         return [
             'datasets' => [
                 [
@@ -25,7 +28,7 @@ class ServiceTypeChart extends ChartWidget
                     'data' => $data->pluck('total')->toArray(),
                 ],
             ],
-            'labels' => $data->pluck('jenis_pelayanan')->toArray(),
+            'labels' => $data->pluck('nama_klasifikasi')->toArray(),
         ];
     }
 
