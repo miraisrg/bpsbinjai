@@ -13,10 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Card;
-use App\Models\Antrian;
 
 class PelayananResource extends Resource
 {
@@ -43,6 +39,16 @@ class PelayananResource extends Resource
         ];
     }
 
+    public static function getPluralLabel(): string
+    {
+        return 'Laporan Pelayanan';
+    }
+
+    // public static function getLabel(): string
+    // {
+    //     return 'Pelayanan';
+    // }
+
     public static function getPages(): array
     {
         return [
@@ -51,9 +57,4 @@ class PelayananResource extends Resource
             'edit' => EditPelayanan::route('/{record}/edit'),
         ];
     }
-
-    // public static function canCreate(): bool
-    // {
-    //     return false; // disable tombol "Create Pelayanan"
-    // }
 }

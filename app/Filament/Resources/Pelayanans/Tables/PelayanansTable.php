@@ -2,16 +2,12 @@
 
 namespace App\Filament\Resources\Pelayanans\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use App\Models\Pelayanan;
-use App\Models\Antrian;
-use Filament\Actions\Action;
-use App\Models\KlasifikasiPelayanan;
-use App\Models\Tamu;
 
 class PelayanansTable
 {
@@ -19,41 +15,36 @@ class PelayanansTable
     {
         return $table
             ->columns([
-                TextColumn::make('antrian.no_antrian')
-                    ->label('No. Antrian')
-                    ->sortable()
+                TextColumn::make('Antrian.no_antrian')
                     ->searchable(),
-
-                TextColumn::make('antrian.tamu.nama_pengunjung')
-                    ->label('Nama Tamu')
-                    ->sortable()
+                TextColumn::make('Antrian.tamu.nama_pengunjung')
+                    ->label('Nama Pengunjung')
                     ->searchable(),
-
-                TextColumn::make('user.name')
-                    ->label('Petugas')
-                    ->sortable()
+                TextColumn::make('klasifikasi.nama_klasifikasi')
+                    ->label('Jenis Pelayanan')
+                    ->sortable(),
+                TextColumn::make('status_pelayanan')
                     ->searchable(),
-
-                TextColumn::make('antrian.tamu.klasifikasi.nama_klasifikasi')
-                    ->label('Klasifikasi Layanan')
-                    ->sortable()
-                    ->searchable(),
-
+                TextColumn::make('tgl_penyelesaian')
+                    ->date()
+                    ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Tanggal Dilayani')
-                    ->date('d M Y')
+                    ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: false),
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
                 // EditAction::make(),
-                Action::make('tambahLaporan')
+                Action::make('cetak')
                     ->label('Laporan')
-                    ->icon('heroicon-o-plus-circle')
-                    ->color('success')
+                    ->icon('heroicon-o-printer')
                     ->url(fn($record) => route('filament.admin.resources.pelayanans.create', [
                         'antrian_id' => $record->id,
                     ])),

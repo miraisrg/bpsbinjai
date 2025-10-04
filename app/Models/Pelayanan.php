@@ -34,4 +34,8 @@ class Pelayanan extends Model
     {
         return $this->belongsTo(KlasifikasiPelayanan::class, 'klasifikasi_pelayanan_id');
     }
+    public function tamu(): BelongsTo
+    {
+        return $this->belongsTo(Tamu::class, 'user_id');
+    }
 }

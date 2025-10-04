@@ -106,6 +106,9 @@ class GuestForm extends Component
 
         Pelayanan::create([
             'antrian_id' => $antrian->id,
+            'user_id' => null,
+            'klasifikasi_pelayanan_id' => $this->klasifikasi_pelayanan_id,
+
             // user_id akan diisi nanti oleh petugas yang melayani
             // klasifikasi_pelayanan_id juga akan diisi nanti
             'status_pelayanan' => 'Menunggu Dilayani', // Status awal

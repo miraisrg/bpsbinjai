@@ -18,7 +18,7 @@
             </p>
             <div>
                 <span class="inline-block bg-gray-200 text-gray-800 text-sm font-medium px-3 py-1 rounded-full">
-                    Jenis Pelayanan: {{ $antrian->tamu->klasifikasiPelayanan->nama_klasifikasi ?? '-' }}
+                    Jenis Pelayanan: {{ $antrian->tamu->klasifikasi->nama_klasifikasi ?? '-' }}
                 </span>
             </div>
         </div>

@@ -30,4 +30,8 @@ class Tamu extends Model
     {
         return $this->belongsTo(KlasifikasiPelayanan::class, 'klasifikasi_pelayanan_id');
     }
+    public function pelayanans(): HasMany
+    {
+        return $this->hasMany(Pelayanan::class, 'user_id');
+    }
 }

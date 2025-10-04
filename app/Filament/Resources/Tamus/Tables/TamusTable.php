@@ -49,19 +49,35 @@ class TamusTable
             ])
             ->recordActions([
                 EditAction::make(),
-                // Action::make('lengkapiLaporan')
-                //     ->label('Lengkapi Laporan')
-                //     ->icon('heroicon-o-pencil-square')
-                //     ->color('primary')
-                //     ->url(function (Tamu $record): string {
-                //         // Cari record pelayanan yang terhubung dengan antrian terakhir tamu ini
+                // Action::make('laporan')
+                //     ->label(function (Tamu $record) {
                 //         $pelayanan = $record->antrians()->latest()->first()?->pelayanan;
-
-                //         // Jika ada, arahkan ke halaman edit record pelayanan tersebut
-                //         return $pelayanan ? PelayananResource::getUrl('edit', ['record' => $pelayanan]) : '#';
+                //         return ($pelayanan && $pelayanan->user_id) ? 'Lihat Laporan' : 'Lengkapi Laporan';
                 //     })
-                //     // Sembunyikan tombol jika tamu belum memiliki record pelayanan
-                //     ->hidden(fn(Tamu $record) => !$record->antrians()->latest()->first()?->pelayanan),
+                //     ->icon('heroicon-o-pencil-square')
+                //     ->color(function (Tamu $record) {
+                //         $pelayanan = $record->antrians()->latest()->first()?->pelayanan;
+                //         return ($pelayanan && $pelayanan->user_id) ? 'gray' : 'primary';
+                //     })
+                //     ->url(function (Tamu $record): string {
+                //         $antrian = $record->antrians()->latest()->first();
+
+                //         // --- PENGECEKAN DITAMBAHKAN DI SINI ---
+                //         if (!$antrian) {
+                //             // Jika tidak ada antrian, kembalikan URL aman yang tidak melakukan apa-apa
+                //             return '#';
+                //         }
+
+                //         $pelayanan = $antrian->pelayanan;
+
+                //         if ($pelayanan && $pelayanan->user_id) {
+                //             return PelayananResource::getUrl('view', ['record' => $pelayanan]);
+                //         }
+
+                //         // Jika ada antrian, teruskan ID-nya
+                //         return PelayananResource::getUrl('create', ['antrian_id' => $antrian->id]);
+                //     })
+                //     ->hidden(fn(Tamu $record) => !$record->antrians()->latest()->first()),
             ])
             ->toolbarActions([
                 // BulkActionGroup::make([
